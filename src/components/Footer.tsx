@@ -1,4 +1,5 @@
 import ScrollReveal from "./ScrollReveal";
+import logo from "@/assets/foreverr-logo.png";
 
 const socials = [
   { label: "YouTube", href: "#", icon: "M23.5 6.19a3.02 3.02 0 00-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.55A3.02 3.02 0 00.5 6.19 31.56 31.56 0 000 12a31.56 31.56 0 00.5 5.81 3.02 3.02 0 002.12 2.14c1.88.55 9.38.55 9.38.55s7.5 0 9.38-.55a3.02 3.02 0 002.12-2.14A31.56 31.56 0 0024 12a31.56 31.56 0 00-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z" },
@@ -15,11 +16,8 @@ const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-2">
             <ScrollReveal>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-primary-foreground/20 flex items-center justify-center">
-                  <span className="font-bold text-primary-foreground">F</span>
-                </div>
-                <span className="font-serif text-xl font-bold">FOREVERR</span>
+              <div className="mb-4">
+                <img src={logo} alt="FOREVERR / EXXiiT" className="h-10 w-auto brightness-0 invert" />
               </div>
               <p className="text-primary-foreground/70 text-sm leading-relaxed max-w-sm mb-6">
                 Forever in our hearts. Forever in our minds.

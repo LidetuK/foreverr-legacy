@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import logo from "@/assets/foreverr-logo.png";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -25,14 +26,8 @@ const Navbar = () => {
     >
       <div className="container max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-lg gradient-purple flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">F</span>
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-serif font-bold text-lg text-foreground tracking-tight">FOREVERR</span>
-            <span className="text-[10px] text-muted-foreground tracking-widest uppercase">/ EXXiiT</span>
-          </div>
+        <a href="#" className="flex items-center">
+          <img src={logo} alt="FOREVERR / EXXiiT" className="h-10 md:h-12 w-auto" />
         </a>
 
         {/* Desktop Links */}
