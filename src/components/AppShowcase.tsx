@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from "react";
 import ScrollReveal from "./ScrollReveal";
 import showcaseSignup from "@/assets/showcase-signup.png";
 import showcaseFlowers from "@/assets/showcase-flowers.png";
@@ -7,15 +8,34 @@ import showcaseNotifications from "@/assets/showcase-notifications.png";
 import showcaseLivestream from "@/assets/showcase-livestream.png";
 
 const screenshots = [
-  { src: showcaseLivestream, alt: "Live-streamed memorial service with audience participation", label: "Live Streaming" },
-  { src: showcaseFlowers, alt: "Honors with Flowers virtual gifting system", label: "Virtual Gifting" },
-  { src: showcaseMemorial, alt: "Memorial profile with events and timeline", label: "Memorial Profile" },
-  { src: showcaseFollowers, alt: "Followers and community features", label: "Community" },
-  { src: showcaseNotifications, alt: "Notifications panel", label: "Notifications" },
-  { src: showcaseSignup, alt: "Sign up screen for FOREVERR app", label: "Easy Sign Up" },
+  { src: showcaseLivestream, alt: "Live-streamed memorial service", label: "Live Streaming", desc: "Join virtual services in real-time" },
+  { src: showcaseFlowers, alt: "Honors with Flowers", label: "Virtual Gifting", desc: "Send tokens of honor and love" },
+  { src: showcaseMemorial, alt: "Memorial profile with timeline", label: "Memorial Profile", desc: "Map out a life story" },
+  { src: showcaseFollowers, alt: "Community and followers", label: "Community", desc: "Stay connected with loved ones" },
+  { src: showcaseNotifications, alt: "Notifications panel", label: "Notifications", desc: "Never miss a tribute" },
+  { src: showcaseSignup, alt: "Easy sign up flow", label: "Easy Sign Up", desc: "Get started in minutes" },
 ];
 
 const AppShowcase = () => {
+  const [active, setActive] = useState(0);
+  const total = screenshots.length;
+
+  const next = useCallback(() => {
+    setActive((prev) => (prev + 1) % total);
+  }, [total]);
+
+  useEffect(() => {
+    const interval = setInterval(next, 3500);
+    return () => clearInterval(interval);
+  }, [next]);
+
+  const getOffset = (index: number) => {
+    let diff = index - active;
+    if (diff > total / 2) diff -= total;
+    if (diff < -total / 2) diff += total;
+    return diff;
+  };
+
   return (
     <section className="section-padding bg-background overflow-hidden">
       <div className="container max-w-7xl mx-auto px-4 md:px-8">
@@ -29,12 +49,36 @@ const AppShowcase = () => {
           </div>
         </ScrollReveal>
 
-        {/* Scrolling showcase */}
-        <div className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-          {screenshots.map((shot, i) => (
-            <ScrollReveal key={shot.label} delay={i * 80} className="flex-shrink-0 snap-center">
-              <div className="w-72 md:w-80 group">
-                <div className="glass-card overflow-hidden mb-3 transition-all duration-500 group-hover:shadow-xl group-hover:-translate-y-1">
+        {/* Carousel */}
+        <div className="relative h-[420px] md:h-[480px] flex items-center justify-center">
+          {screenshots.map((shot, i) => {
+            const offset = getOffset(i);
+            const isActive = offset === 0;
+            const absOffset = Math.abs(offset);
+            const visible = absOffset <= 2;
+
+            return (
+              <button
+                key={shot.label}
+                onClick={() => setActive(i)}
+                className="absolute transition-all duration-700 ease-in-out cursor-pointer focus:outline-none"
+                style={{
+                  transform: `translateX(${offset * 280}px) scale(${isActive ? 1 : 0.75 - absOffset * 0.05})`,
+                  zIndex: 10 - absOffset,
+                  opacity: visible ? (isActive ? 1 : 0.4) : 0,
+                  pointerEvents: visible ? "auto" : "none",
+                  filter: isActive ? "none" : "brightness(0.6)",
+                }}
+                aria-label={`View ${shot.label}`}
+              >
+                <div
+                  className={`w-56 md:w-72 overflow-hidden transition-shadow duration-700 ${
+                    isActive
+                      ? "shadow-2xl ring-2 ring-accent/40"
+                      : "shadow-lg"
+                  }`}
+                  style={{ borderRadius: "var(--radius)" }}
+                >
                   <img
                     src={shot.src}
                     alt={shot.alt}
@@ -42,9 +86,32 @@ const AppShowcase = () => {
                     loading="lazy"
                   />
                 </div>
-                <p className="text-sm font-semibold text-foreground text-center">{shot.label}</p>
-              </div>
-            </ScrollReveal>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Active label */}
+        <div className="text-center mt-6 min-h-[56px]">
+          <p className="font-serif text-xl font-bold text-foreground transition-all duration-500">
+            {screenshots[active].label}
+          </p>
+          <p className="text-sm text-muted-foreground">{screenshots[active].desc}</p>
+        </div>
+
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mt-6">
+          {screenshots.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              className={`h-2 rounded-full transition-all duration-500 ${
+                i === active
+                  ? "w-6 bg-accent"
+                  : "w-2 bg-border hover:bg-muted-foreground/40"
+              }`}
+            />
           ))}
         </div>
       </div>
